@@ -1,0 +1,60 @@
+{
+    "name": "pxlrbt/laravel-docs",
+    "description": "Render markdown documentation inside Laravel with a modern VitePress-inspired layout.",
+    "keywords": [
+        "laravel",
+        "docs",
+        "markdown",
+        "documentation"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dennis Koch",
+            "email": "info@pxlrbt.de",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/contracts": "^11.0|^12.0",
+        "league/commonmark": "^2.5",
+        "spatie/laravel-package-tools": "^1.16",
+        "symfony/yaml": "^7.0"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.0",
+        "orchestra/testbench": "^10.0",
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin-laravel": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "pxlrbt\\LaravelDocs\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "pxlrbt\\LaravelDocs\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "format": "XDEBUG_MODE=off vendor/bin/pint",
+        "analyse": "XDEBUG_MODE=off vendor/bin/phpstan --memory-limit=512M",
+        "test": "XDEBUG_MODE=off vendor/bin/pest --parallel"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        },
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "pxlrbt\\LaravelDocs\\DocsServiceProvider"
+            ]
+        }
+    }
+}
