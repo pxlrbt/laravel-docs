@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace pxlrbt\LaravelDocs;
 
 use Illuminate\Support\Facades\Route;
-use pxlrbt\LaravelDocs\Commands\PublishDocsAssetsCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
