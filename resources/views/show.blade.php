@@ -5,10 +5,8 @@
         :description="$frontmatter['description'] ?? 'Documentation'"
         :showFooterCta="false"
     >
-        <div class="pt-24 lg:pt-28">
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                @include('docs::partials.body')
-            </div>
+        <div class="docs-wrapper">
+            @include('docs::partials.body')
         </div>
     </x-dynamic-component>
 @else

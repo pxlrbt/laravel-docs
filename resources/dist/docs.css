@@ -414,6 +414,12 @@ html {
     flex: 1;
 }
 
+.docs-wrapper {
+    max-width: 80rem;
+    margin-block: 2rem;
+    margin-inline: auto;
+}
+
 /* Standalone mode */
 .docs-standalone {
     padding: 0;
