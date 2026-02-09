@@ -13,7 +13,6 @@ use pxlrbt\LaravelDocs\Filament\Pages\ViewDocs;
 
 class DocsPlugin implements Plugin
 {
-
     protected static string $id = 'docs';
 
     protected string $instance = 'default';
