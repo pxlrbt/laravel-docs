@@ -27,7 +27,7 @@ class ViewDocs extends Page
     {
         $plugin = DocsPlugin::get();
 
-        return $plugin->getPageTitle() ?? 'Documentation';
+        return $plugin->getPageTitle() ?? __('docs::filament.title');
     }
 
     public static function getNavigationIcon(): string|Htmlable|null
@@ -37,7 +37,7 @@ class ViewDocs extends Page
 
     public static function getNavigationLabel(): string
     {
-        return DocsPlugin::get()->getNavigationLabel() ?? 'Documentation';
+        return DocsPlugin::get()->getNavigationLabel() ?? __('docs::filament.navigation_label');
     }
 
     public static function getNavigationGroup(): ?string

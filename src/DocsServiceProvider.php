@@ -16,7 +16,8 @@ class DocsServiceProvider extends PackageServiceProvider
             ->name('laravel-docs')
             ->hasConfigFile('docs')
             ->hasViews('docs')
-            ->hasAssets();
+            ->hasAssets()
+            ->hasTranslations();
     }
 
     public function packageBooted(): void
