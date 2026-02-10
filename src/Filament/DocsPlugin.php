@@ -19,7 +19,7 @@ class DocsPlugin implements Plugin
 
     protected string $navigationIcon = 'heroicon-o-book-open';
 
-    protected ?string $navigationLabel = 'Documentation';
+    protected ?string $navigationLabel = null;
 
     protected ?string $navigationGroup = null;
 
