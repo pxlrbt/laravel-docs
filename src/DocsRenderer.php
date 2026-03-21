@@ -67,9 +67,34 @@ class DocsRenderer
         $html = $result->getContent();
 
         $tableOfContents = '';
-        if (preg_match('/<ul class="docs-toc">.*?<\/ul>/s', $html, $matches)) {
-            $tableOfContents = $matches[0];
-            $html = str_replace($matches[0], '', $html);
+        $tocStart = strpos($html, '<ul class="docs-toc">');
+        if ($tocStart !== false) {
+            $depth = 0;
+            $pos = $tocStart;
+            $len = strlen($html);
+
+            while ($pos < $len) {
+                $nextOpen = strpos($html, '<ul', $pos);
+                $nextClose = strpos($html, '</ul>', $pos);
+
+                if ($nextClose === false) {
+                    break;
+                }
+
+                if ($nextOpen !== false && $nextOpen < $nextClose) {
+                    $depth++;
+                    $pos = $nextOpen + 3;
+                } else {
+                    $depth--;
+                    if ($depth === 0) {
+                        $tocEnd = $nextClose + 5;
+                        $tableOfContents = substr($html, $tocStart, $tocEnd - $tocStart);
+                        $html = substr($html, 0, $tocStart).substr($html, $tocEnd);
+                        break;
+                    }
+                    $pos = $nextClose + 5;
+                }
+            }
         }
 
         $frontmatter = $result instanceof RenderedContentWithFrontMatter

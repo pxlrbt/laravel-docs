@@ -164,6 +164,30 @@ it('hides toc sidebar when has_sidebar is false', function () {
     $response->assertDontSee('docs-toc-aside', false);
 });
 
+it('extracts full table of contents with nested headings into sidebar', function () {
+    $response = $this->get('/docs/nested-headings');
+
+    $response->assertOk();
+
+    // All H2 headings should appear in the TOC sidebar, not in the main content as raw list items
+    $response->assertSee('docs-toc-aside', false);
+    $response->assertSeeInOrder([
+        'docs-toc-aside',
+        'First Section',
+        'Second Section',
+        'Third Section',
+    ], false);
+
+    // The TOC should not leak into the main prose area above the H1
+    $content = $response->getContent();
+    $h1Pos = strpos($content, '<h1');
+    $tocInProsePos = strpos($content, 'Second Section');
+
+    // Second Section in TOC sidebar should exist, but no orphaned list items before H1
+    $orphanedLi = strpos($content, '<li', $h1Pos !== false ? 0 : 0);
+    expect($content)->not->toContain('<li><p><a class="docs-heading-permalink"');
+});
+
 it('hides pagination when has_pagination is false', function () {
     config(['docs.default.has_pagination' => false]);
 
