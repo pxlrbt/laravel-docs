@@ -5,7 +5,7 @@ Render markdown documentation inside Laravel.
 ## Requirements
 
 - PHP 8.2+
-- Laravel 11 or 12
+- Laravel 11, 12, or 13
 
 ## Installation
 
