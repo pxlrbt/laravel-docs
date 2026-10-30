@@ -111,6 +111,12 @@ html {
     }
 }
 
+/* Align the navigation text with the Filament page heading; link highlights stick out by their padding. */
+.fi-body .docs-sidebar {
+    margin-left: -0.75rem;
+    padding-left: 0;
+}
+
 .docs-sidebar-group {
     margin-bottom: 1.5rem;
 }
