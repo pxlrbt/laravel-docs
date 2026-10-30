@@ -4,8 +4,8 @@
     --docs-color-primary-hover: light-dark(#1d4ed8, #3b82f6);
     --docs-color-primary-light: light-dark(#eff6ff, rgba(96, 165, 250, 0.1));
     --docs-color-text:          light-dark(#374151, #cbd5e1);
-    --docs-color-text-muted:    light-dark(#6b7280, #94a3b8);
-    --docs-color-text-faint:    light-dark(#9ca3af, #64748b);
+    --docs-color-text-muted:    light-dark(#4b5563, #a3aebf);
+    --docs-color-text-faint:    light-dark(#6b7280, #8b95a7);
     --docs-color-heading:       light-dark(#111827, #f1f5f9);
     --docs-color-link:          var(--docs-color-primary);
     --docs-color-border:        light-dark(#e5e7eb, #334155);
@@ -161,6 +161,25 @@ html {
     }
 }
 
+/* Mermaid diagrams: the source stays visible as code until docs.js has rendered it */
+.docs-prose .docs-mermaid[data-rendered]:not([data-error]) {
+    font-family: var(--docs-font-sans);
+    background: none;
+    padding: 0;
+    text-align: center;
+    line-height: normal;
+
+    & .node rect { rx: 8px; ry: 8px; }
+    & .edgeLabel { font-size: 0.8125rem; }
+
+    & svg {
+        display: block;
+        margin-inline: auto;
+        max-width: 100%;
+        height: auto;
+    }
+}
+
 /* Content */
 .docs-content {
     padding: 1.5rem;
@@ -295,7 +314,8 @@ html {
         margin: 2em 0;
     }
 
-    & img {
+    & img,
+    & video {
         max-width: 100%;
         height: auto;
         border-radius: 0.5rem;

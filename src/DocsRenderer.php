@@ -64,7 +64,7 @@ class DocsRenderer
 
         $result = $converter->convert($markdown);
 
-        $html = $result->getContent();
+        $html = $this->prepareMermaidDiagrams($result->getContent());
 
         $tableOfContents = '';
         $tocStart = strpos($html, '<ul class="docs-toc">');
@@ -114,6 +114,23 @@ class DocsRenderer
             instance: $instance,
             prevPage: $prevPage,
             nextPage: $nextPage,
+        );
+    }
+
+    /**
+     * Turns ```mermaid code blocks into placeholders rendered client-side by docs.js.
+     * The content-based key and wire:ignore keep rendered diagrams across Livewire updates.
+     */
+    private function prepareMermaidDiagrams(string $html): string
+    {
+        return (string) preg_replace_callback(
+            '#<pre><code class="language-mermaid">(.*?)</code></pre>#s',
+            fn (array $matches): string => sprintf(
+                '<pre class="docs-mermaid" wire:ignore wire:key="docs-mermaid-%s">%s</pre>',
+                md5($matches[1]),
+                $matches[1],
+            ),
+            $html,
         );
     }
 

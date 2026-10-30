@@ -188,6 +188,17 @@ it('extracts full table of contents with nested headings into sidebar', function
     expect($content)->not->toContain('<li><p><a class="docs-heading-permalink"');
 });
 
+it('renders mermaid code blocks as diagram placeholders', function () {
+    $response = $this->get('/docs/diagrams');
+
+    $response->assertOk();
+    $response->assertSee('<pre class="docs-mermaid" wire:ignore wire:key="docs-mermaid-', false);
+    $response->assertSee('A[Start] --&gt; B{Valid?}', false);
+    $response->assertDontSee('language-mermaid', false);
+    $response->assertSee('<code class="language-php">', false);
+    $response->assertSee('vendor/docs/docs.js', false);
+});
+
 it('hides pagination when has_pagination is false', function () {
     config(['docs.default.has_pagination' => false]);
 
