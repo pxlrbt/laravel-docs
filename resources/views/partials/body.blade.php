@@ -1,5 +1,6 @@
 @once
     <link rel="stylesheet" href="{{ asset('vendor/docs/docs.css') }}">
+    <script type="module" src="{{ asset('vendor/docs/docs.js') }}"></script>
 @endonce
 
 {{-- Mobile Navigation --}}

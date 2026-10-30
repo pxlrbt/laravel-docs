@@ -130,5 +130,10 @@ class DocsPlugin implements Plugin
             PanelsRenderHook::HEAD_END,
             fn (): string => Blade::render('<link rel="stylesheet" href="{{ asset(\'vendor/docs/docs.css\') }}">'),
         );
+
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::BODY_END,
+            fn (): string => Blade::render('<script type="module" src="{{ asset(\'vendor/docs/docs.js\') }}"></script>'),
+        );
     }
 }
