@@ -77,6 +77,8 @@ class ViewDocs extends Page
     public function navigateTo(string $slug): void
     {
         $this->currentSlug = $slug;
+
+        $this->js('window.scrollTo({ top: 0 })');
     }
 
     public function content(Schema $schema): Schema
