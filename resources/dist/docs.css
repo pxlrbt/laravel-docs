@@ -319,6 +319,223 @@ html {
         max-width: 100%;
         height: auto;
         border-radius: 0.5rem;
+        cursor: zoom-in;
+    }
+
+    & a img, & a video {
+        cursor: pointer;
+    }
+
+    & figure {
+        margin: 0 0 1.5em;
+
+        & img, & video {
+            display: block;
+        }
+    }
+
+    & figcaption {
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        color: var(--docs-color-text-muted);
+        text-align: center;
+    }
+
+    & details {
+        margin: 0 0 1em;
+        border: 1px solid var(--docs-color-border);
+        border-radius: 0.5rem;
+
+        & > summary {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.625rem 1rem;
+            font-weight: 600;
+            color: var(--docs-color-heading);
+            cursor: pointer;
+            list-style: none;
+
+            &::-webkit-details-marker {
+                display: none;
+            }
+
+            /* Chevron at the end, drawn as an SVG mask so it takes the text colour. */
+            &::after {
+                content: '';
+                flex-shrink: 0;
+                width: 1.125rem;
+                height: 1.125rem;
+                margin-left: auto;
+                background-color: var(--docs-color-text-faint);
+                mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+                transition: transform 0.2s;
+            }
+
+            &:hover::after {
+                background-color: var(--docs-color-heading);
+            }
+        }
+
+        &[open] > summary {
+            border-bottom: 1px solid var(--docs-color-border);
+
+            &::after {
+                transform: rotate(180deg);
+            }
+        }
+
+        & > :not(summary) {
+            margin-inline: 1rem;
+        }
+
+        & > :nth-child(2) {
+            margin-top: 1rem;
+        }
+
+        & > :last-child {
+            margin-bottom: 1rem;
+        }
+    }
+}
+
+/* Lightbox */
+.docs-lightbox {
+    /* 100% instead of 100vw, so the right edge doesn't sit under the page scrollbar. */
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-family: var(--docs-font-sans);
+    color: var(--docs-color-heading);
+    --docs-lightbox-glass:        light-dark(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.16));
+    --docs-lightbox-glass-hover:  light-dark(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.26));
+    --docs-lightbox-glass-border: light-dark(rgba(15, 23, 42, 0.14), rgba(255, 255, 255, 0.24));
+
+    &::backdrop {
+        background: light-dark(rgba(241, 245, 249, 0.88), rgba(2, 6, 23, 0.88));
+        backdrop-filter: blur(6px);
+    }
+
+    & .docs-lightbox-stage {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        height: 100%;
+        padding: 4.5rem 5.5rem 1.5rem;
+        box-sizing: border-box;
+    }
+
+    & .docs-lightbox-media {
+        display: flex;
+        justify-content: center;
+        min-height: 0;
+        max-width: 100%;
+
+        & img, & video {
+            max-width: 100%;
+            max-height: calc(100dvh - 10rem);
+            object-fit: contain;
+            border-radius: 0.5rem;
+            outline: none;
+            box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.35);
+        }
+    }
+
+    & .docs-lightbox-info,
+    & button {
+        background: var(--docs-lightbox-glass);
+        border: 1px solid var(--docs-lightbox-glass-border);
+        backdrop-filter: blur(12px) saturate(1.5);
+        border-radius: 999px;
+        box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.2);
+        color: inherit;
+    }
+
+    /* Caption and counter share one glass pill, separated by a divider. */
+    & .docs-lightbox-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        max-width: min(48rem, 100%);
+        padding: 0.3rem 0.9rem;
+        font-size: 0.875rem;
+    }
+
+    & .docs-lightbox-caption {
+        margin: 0;
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    & .docs-lightbox-counter {
+        flex-shrink: 0;
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    & .docs-lightbox-caption:not(:empty) + .docs-lightbox-counter {
+        padding-left: 0.75rem;
+        border-left: 1px solid var(--docs-lightbox-glass-border);
+        opacity: 0.75;
+    }
+
+    &[data-single] .docs-lightbox-info:has(.docs-lightbox-caption:empty) {
+        display: none;
+    }
+
+    & button {
+        position: absolute;
+        display: grid;
+        place-items: center;
+        width: 2.75rem;
+        height: 2.75rem;
+        padding: 0;
+        cursor: pointer;
+        transition: background-color 0.15s;
+
+        &:hover {
+            background: var(--docs-lightbox-glass-hover);
+        }
+
+        & svg {
+            width: 1.375rem;
+            height: 1.375rem;
+            stroke-width: 2.25;
+        }
+    }
+
+    & .docs-lightbox-close {
+        top: 1.5rem;
+        right: 1.5rem;
+    }
+
+    & .docs-lightbox-prev,
+    & .docs-lightbox-next {
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    & .docs-lightbox-prev {
+        left: 1.5rem;
+    }
+
+    & .docs-lightbox-next {
+        right: 1.5rem;
+    }
+
+    &[data-single] :is(.docs-lightbox-prev, .docs-lightbox-next, .docs-lightbox-counter) {
+        display: none;
     }
 }
 

@@ -199,6 +199,22 @@ it('renders mermaid code blocks as diagram placeholders', function () {
     $response->assertSee('vendor/docs/docs.js', false);
 });
 
+it('renders markdown inside details blocks', function () {
+    $response = $this->get('/docs/accordion');
+
+    $response->assertOk();
+    $response->assertSee('<summary>Show details</summary>', false);
+    $response->assertSee('<p>Hidden <strong>markdown</strong> content.</p>', false);
+});
+
+it('renders image titles as captions', function () {
+    $response = $this->get('/docs/accordion');
+
+    $response->assertOk();
+    $response->assertSee('<figure><img src="/images/screenshot.png" alt="Screenshot" /><figcaption>The **settings** page</figcaption></figure>', false);
+    $response->assertSee('<p><img src="/images/plain.png" alt="No caption" /></p>', false);
+});
+
 it('hides pagination when has_pagination is false', function () {
     config(['docs.default.has_pagination' => false]);
 

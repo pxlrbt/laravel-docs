@@ -100,6 +100,10 @@ When no layout is set, docs render as a standalone page with their own styles.
 - GitHub-flavored markdown (tables, strikethrough, etc.)
 - Auto-generated table of contents from h2/h3 headings
 - Heading permalink anchors
+- Lightbox for images and videos (prev/next, arrow keys, counter)
+- Image captions from the image title: `![Alt](image.png "Caption")`. For videos, wrap them in `<figure>` with a `<figcaption>`. Captions also show in the lightbox
+- Accordions via `<details>`/`<summary>` (leave a blank line after `<summary>` so markdown inside is rendered)
+- Mermaid diagrams
 - Sidebar navigation grouped by frontmatter `group`
 - Prev/next page pagination
 - Responsive design (mobile, tablet, desktop)

@@ -77,3 +77,89 @@ document.addEventListener('livewire:init', () => {
         succeed(() => requestAnimationFrame(renderDiagrams));
     });
 });
+
+// Lightbox: clicking an image or video in the content opens it in a <dialog> together with all other media of the page.
+let lightbox = null;
+let gallery = [];
+let galleryIndex = 0;
+
+const icon = (path) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${path}"/></svg>`;
+
+function createLightbox() {
+    const dialog = document.createElement('dialog');
+    dialog.className = 'docs-lightbox';
+    // Focusing the dialog itself instead of its first button avoids a focus ring on the close button.
+    dialog.tabIndex = -1;
+    dialog.innerHTML = `
+        <div class="docs-lightbox-stage">
+            <div class="docs-lightbox-media"></div>
+            <div class="docs-lightbox-info">
+                <p class="docs-lightbox-caption"></p>
+                <span class="docs-lightbox-counter"></span>
+            </div>
+        </div>
+        <button type="button" class="docs-lightbox-close" aria-label="Close">${icon('M6 6l12 12M18 6L6 18')}</button>
+        <button type="button" class="docs-lightbox-prev" aria-label="Previous">${icon('M15 18l-6-6 6-6')}</button>
+        <button type="button" class="docs-lightbox-next" aria-label="Next">${icon('M9 18l6-6-6-6')}</button>
+    `;
+
+    dialog.querySelector('.docs-lightbox-close').addEventListener('click', () => dialog.close());
+    dialog.querySelector('.docs-lightbox-prev').addEventListener('click', () => showMedia(galleryIndex - 1));
+    dialog.querySelector('.docs-lightbox-next').addEventListener('click', () => showMedia(galleryIndex + 1));
+    // Clicks next to the media close the lightbox.
+    dialog.addEventListener('click', (event) => {
+        if (event.target === dialog || event.target.matches('.docs-lightbox-stage, .docs-lightbox-media')) {
+            dialog.close();
+        }
+    });
+    dialog.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft') {
+            showMedia(galleryIndex - 1);
+        }
+
+        if (event.key === 'ArrowRight') {
+            showMedia(galleryIndex + 1);
+        }
+    });
+    // Removing the media also stops a playing video.
+    dialog.addEventListener('close', () => dialog.querySelector('.docs-lightbox-media').replaceChildren());
+
+    document.body.append(dialog);
+
+    return dialog;
+}
+
+function showMedia(index) {
+    galleryIndex = (index + gallery.length) % gallery.length;
+    const source = gallery[galleryIndex];
+    const media = source.tagName === 'VIDEO'
+        ? Object.assign(document.createElement('video'), { src: source.currentSrc || source.src, poster: source.poster, controls: true, autoplay: true, playsInline: true })
+        : Object.assign(document.createElement('img'), { src: source.currentSrc || source.src, alt: source.alt });
+
+    lightbox.querySelector('.docs-lightbox-media').replaceChildren(media);
+    lightbox.querySelector('.docs-lightbox-caption').textContent = source.closest('figure')?.querySelector('figcaption')?.textContent.trim() ?? '';
+    lightbox.querySelector('.docs-lightbox-counter').textContent = `${galleryIndex + 1} / ${gallery.length}`;
+    lightbox.toggleAttribute('data-single', gallery.length === 1);
+}
+
+const isLightboxMedia = (element) => ! element.closest('a, .docs-mermaid');
+
+// Delegated, so it keeps working after Livewire swaps the page content.
+document.addEventListener('click', (event) => {
+    const source = event.target.closest('.docs-prose img, .docs-prose video');
+
+    if (! source || ! isLightboxMedia(source)) {
+        return;
+    }
+
+    event.preventDefault();
+    if (source.tagName === 'VIDEO') {
+        source.pause();
+    }
+
+    gallery = [...source.closest('.docs-prose').querySelectorAll('img, video')].filter(isLightboxMedia);
+    lightbox ??= createLightbox();
+    showMedia(gallery.indexOf(source));
+    lightbox.showModal();
+    lightbox.focus();
+});

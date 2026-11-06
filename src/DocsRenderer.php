@@ -64,7 +64,7 @@ class DocsRenderer
 
         $result = $converter->convert($markdown);
 
-        $html = $this->prepareMermaidDiagrams($result->getContent());
+        $html = $this->prepareImageCaptions($this->prepareMermaidDiagrams($result->getContent()));
 
         $tableOfContents = '';
         $tocStart = strpos($html, '<ul class="docs-toc">');
@@ -129,6 +129,24 @@ class DocsRenderer
                 '<pre class="docs-mermaid" wire:ignore wire:key="docs-mermaid-%s">%s</pre>',
                 md5($matches[1]),
                 $matches[1],
+            ),
+            $html,
+        );
+    }
+
+    /**
+     * Turns an image with a title that stands alone in a paragraph, ![Alt](image.png "Caption"),
+     * into a figure with the title as caption.
+     */
+    private function prepareImageCaptions(string $html): string
+    {
+        return (string) preg_replace_callback(
+            '#<p>(<img [^>]*?) title="([^"]*)"([^>]*>)</p>#',
+            fn (array $matches): string => sprintf(
+                '<figure>%s%s<figcaption>%s</figcaption></figure>',
+                $matches[1],
+                $matches[3],
+                $matches[2],
             ),
             $html,
         );
